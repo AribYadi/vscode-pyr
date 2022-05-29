@@ -2,6 +2,7 @@
   "name": "pyrlang",
   "displayName": "Pyr Language Support",
   "author": "AribYadi",
+  "publisher": "AribYadi",
   "description": "Pyr language support for VSCode.",
   "license": "Apache-2.0",
   "repository": "https://github.com/AribYadi/pyr.git",
@@ -12,6 +13,10 @@
   "categories": [
     "Programming Languages"
   ],
+  "activationEvents": [
+    "onLanguage:pyrlang"
+  ],
+  "main": "./dist/extension.js",
   "contributes": {
     "languages": [
       {
