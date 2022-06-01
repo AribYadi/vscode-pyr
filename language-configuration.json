@@ -1,0 +1,20 @@
+{
+  "brackets": [["(", ")"]],
+  "autoClosingPairs": [
+    ["[", "]"],
+    ["\"", "\""]
+  ],
+  "surroundingPairs": [
+    ["(", ")"],
+    ["\"", "\""]
+  ],
+  "indentationRules": {
+    "increaseIndentPattern": "^(\\:[^\"]*|\\([^)\"]*|\\\"[^\"]*)$"
+  },
+  "onEnterRules": [
+    {
+      "beforeText": "^\\s*(?:if|else|while).*?:\\s*$",
+      "action": { "indent": "indent" }
+    }
+  ]
+}

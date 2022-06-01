@@ -28,7 +28,8 @@
           "Pyr",
           "pyr",
           "pyrlang"
-        ]
+        ],
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
