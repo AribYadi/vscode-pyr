@@ -91,7 +91,7 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
           case 'print':
           case 'true':
           case 'false':
-            currentWord = '';
+            if (!/[a-zA-Z0-9_]/.test(line[column])) currentWord = '';
             break;
 
           default:
