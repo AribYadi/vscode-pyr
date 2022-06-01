@@ -30,6 +30,13 @@
           "pyrlang"
         ]
       }
+    ],
+    "grammars": [
+      {
+        "language": "pyrlang",
+        "scopeName": "source.pyrlang",
+        "path": "./syntaxes/pyrlang.tmLanguage.json"
+      }
     ]
   },
   "scripts": {

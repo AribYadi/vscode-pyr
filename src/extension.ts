@@ -4,7 +4,7 @@ const tokenTypes = new Map<string, number>;
 const tokenMods = new Map<string, number>;
 const legend = (function () {
   const tokenTypesLegend: string[] = [
-    'variable', 'string', 'keyword', 'number', 'operator'
+    'variable', 'operator'
   ];
   tokenTypesLegend.forEach((tokenType, i) => tokenTypes.set(tokenType, i));
 
@@ -79,10 +79,6 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
       let column = 0;
       let currentWord = '';
       do {
-        if (line[column] === '"') {
-          inString = !inString;
-        }
-
         currentWord += line[column];
         column++;
 
@@ -93,33 +89,25 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
           case 'else':
           case 'while':
           case 'print':
-            tokenType = 'keyword';
-            break;
-
-          case '+':
-          case '-':
-          case '*':
-          case '/':
-          case '=':
-            tokenType = 'operator';
+          case 'true':
+          case 'false':
+            currentWord = '';
             break;
 
           default:
-            if (currentWord.length > 1 && currentWord.startsWith('"') && currentWord.endsWith('"')) {
-              tokenType = 'string';
-              break;
-            }
-            if (!inString) {
-              if (currentWord.length > 0 && /[a-zA-Z_][a-zA-Z0-9_]*/.test(currentWord) && (column > line.length - 1 || !/[a-zA-Z_][a-zA-Z0-9_]*/.test(line[column]))) {
+              if (!inString && currentWord.length > 0 && /[a-zA-Z_][a-zA-Z0-9_]*/.test(currentWord) && (column > line.length - 1 || !/[a-zA-Z_][a-zA-Z0-9_]*/.test(line[column]))) {
                 tokenType = 'variable';
                 break;
-              }
-              if (/[0-9]+/.test(currentWord)) {
-                tokenType = 'number';
-                break;
-              }
             }
           break;
+        }
+
+        if (currentWord.startsWith('"')) {
+          inString = true;
+          if (currentWord.length > 1 && currentWord.endsWith('"')) {
+            inString = false;
+            tokenType = undefined;
+          }
         }
 
         if (tokenType !== undefined) {
