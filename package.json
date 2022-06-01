@@ -6,7 +6,7 @@
   "description": "Pyr language support for VSCode.",
   "license": "Apache-2.0",
   "repository": "https://github.com/AribYadi/pyr.git",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.67.0"
   },

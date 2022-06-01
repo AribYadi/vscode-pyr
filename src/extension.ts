@@ -82,9 +82,6 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
         if (line[column] === '"') {
           inString = !inString;
         }
-        if (/\s/.test(line[column]) && !inString) {
-          currentWord = '';
-        }
 
         currentWord += line[column];
         column++;
@@ -98,7 +95,7 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
           case 'print':
             tokenType = 'keyword';
             break;
-          
+
           case '+':
           case '-':
           case '*':
@@ -134,6 +131,11 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
             tokenModifiers: []
           });
           currentWord = '';
+        }
+
+        if (/[ \t]/.test(line[column]) && !inString) {
+          currentWord = '';
+          column++;
         }
       } while (column < line.length);
     }
