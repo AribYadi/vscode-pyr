@@ -45,7 +45,7 @@
     },
     "operators": {
       "name": "keyword.operator.pyrlang",
-      "match": "\\+|\\-|\\*|\\/|\\="
+      "match": "\\+|\\-|\\*|\\/|\\=|\\!|\\<|\\>|\\=\\=|\\!\\=|\\<\\=|\\>\\="
     }
   },
   "scopeName": "source.pyrlang"
