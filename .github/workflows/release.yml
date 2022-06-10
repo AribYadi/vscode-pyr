@@ -1,0 +1,29 @@
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  create_release:
+    name: Package Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - run: npm install
+      - name: Install VSCE
+        run: npm install -g vsce
+      - name: Package Extension
+        run: vsce package
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          files: *.vsix
