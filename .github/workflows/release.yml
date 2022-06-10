@@ -25,5 +25,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          files: *.vsix
+          tag_name: ${{ github.ref_name }}
+          files: "*.vsix"
