@@ -13,6 +13,9 @@
     },
     {
       "include": "#operators"
+    },
+    {
+      "include": "#comments"
     }
   ],
   "repository": {
@@ -20,7 +23,7 @@
       "patterns": [
         {
           "name": "keyword.control.pyrlang",
-          "match": "\\b(if|else|while|print)\\b"
+          "match": "\\b(if|else|while|print|and|or)\\b"
         },
         {
           "name": "keyword.other.pyrlang",
@@ -46,6 +49,11 @@
     "operators": {
       "name": "keyword.operator.pyrlang",
       "match": "\\+|\\-|\\*|\\/|\\=|\\!|\\<|\\>|\\=\\=|\\!\\=|\\<\\=|\\>\\="
+    },
+    "comments": {
+      "name": "comment.line.number-sign.pyrlang",
+      "begin": "\\#",
+      "end": "\\n"
     }
   },
   "scopeName": "source.pyrlang"

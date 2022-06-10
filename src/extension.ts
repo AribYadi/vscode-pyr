@@ -91,6 +91,8 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
           case 'print':
           case 'true':
           case 'false':
+          case 'and':
+          case 'or':
             if (!/[a-zA-Z0-9_]/.test(line[column])) currentWord = '';
             break;
 
@@ -104,7 +106,7 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
 
         if (currentWord.startsWith('"')) {
           inString = true;
-          if (currentWord.length > 1 && currentWord.endsWith('"')) {
+          if (currentWord.length > 1 && !currentWord.endsWith('\\"') && currentWord.endsWith('"')) {
             inString = false;
             tokenType = undefined;
           }
@@ -124,6 +126,11 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
         if (/[ \t]/.test(line[column]) && !inString) {
           currentWord = '';
           column++;
+        }
+        if (line[column] === '#') {
+          while (column < line.length || line[column] !== '\n') {
+            column++;
+          }
         }
       } while (column < line.length);
     }
