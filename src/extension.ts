@@ -18,8 +18,7 @@ export function activate(ctx: vscode.ExtensionContext) {
   const completionItemProvider =
     vscode.languages.registerCompletionItemProvider(
       { scheme: "file", language: "pyrlang" },
-      new CompletionItemProvider(),
-      "\n"
+      new CompletionItemProvider()
     );
   ctx.subscriptions.push(completionItemProvider);
   // const documentSemanticTokensProvider = vscode.languages.registerDocumentSemanticTokensProvider({ scheme: 'file', language: 'pyrlang' }, new DocumentSemanticTokensProvider(), legend);
