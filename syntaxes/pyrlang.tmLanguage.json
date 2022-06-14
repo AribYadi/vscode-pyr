@@ -18,6 +18,12 @@
       "include": "#comments"
     },
     {
+      "include": "#booleans"
+    },
+    {
+      "include": "#types"
+    },
+    {
       "include": "#variables"
     }
   ],
@@ -26,11 +32,11 @@
       "patterns": [
         {
           "name": "keyword.control.pyrlang",
-          "match": "\\b(if|else|while|print|and|or)\\b"
+          "match": "\\b(if|else|while|print)\\b"
         },
         {
           "name": "keyword.other.pyrlang",
-          "match": "\\b(true|false)\\b"
+          "match": "\\b(func)\\b"
         }
       ]
     },
@@ -51,7 +57,7 @@
     },
     "operators": {
       "name": "keyword.operator.pyrlang",
-      "match": "\\+|\\-|\\*|\\/|\\=|\\!|\\<|\\>|\\=\\=|\\!\\=|\\<\\=|\\>\\="
+      "match": "\\+|\\-|\\*|\\/|\\=|\\!|\\<|\\>|\\=\\=|\\!\\=|\\<\\=|\\>\\=|\\%|and|or|\\^"
     },
     "comments": {
       "name": "comment.line.number-sign.pyrlang",
@@ -61,6 +67,14 @@
     "variables": {
       "name": "variable.pyrlang",
       "match": "\\b[a-zA-Z][a-zA-Z0-9_]*\\b"
+    },
+    "booleans": {
+      "name": "constant.language.pyrlang",
+      "match": "\\b(true|false)\\b"
+    },
+    "types": {
+      "name": "storage.type.pyrlang",
+      "match": "\\b(int|string)\\b"
     }
   },
   "scopeName": "source.pyrlang"

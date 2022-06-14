@@ -1,18 +1,18 @@
 import * as vscode from "vscode";
 
-// const tokenTypes = new Map<string, number>;
-// const tokenMods = new Map<string, number>;
-// const legend = (function () {
-//   const tokenTypesLegend: string[] = [
-//     'variable', 'operator'
-//   ];
-//   tokenTypesLegend.forEach((tokenType, i) => tokenTypes.set(tokenType, i));
+const tokenTypes = new Map<string, number>;
+const tokenMods = new Map<string, number>;
+const legend = (function () {
+  const tokenTypesLegend: string[] = [
+    "function", "parameter"
+  ];
+  tokenTypesLegend.forEach((tokenType, i) => tokenTypes.set(tokenType, i));
 
-//   const tokenModsLegend: string[] = [];
-//   tokenModsLegend.forEach((tokenMod, i) => tokenMods.set(tokenMod, i));
+  const tokenModsLegend: string[] = [];
+  tokenModsLegend.forEach((tokenMod, i) => tokenMods.set(tokenMod, i));
 
-//   return new vscode.SemanticTokensLegend(tokenTypesLegend, tokenModsLegend);
-// })();
+  return new vscode.SemanticTokensLegend(tokenTypesLegend, tokenModsLegend);
+})();
 
 export function activate(ctx: vscode.ExtensionContext) {
   const completionItemProvider =
@@ -21,8 +21,8 @@ export function activate(ctx: vscode.ExtensionContext) {
       new CompletionItemProvider()
     );
   ctx.subscriptions.push(completionItemProvider);
-  // const documentSemanticTokensProvider = vscode.languages.registerDocumentSemanticTokensProvider({ scheme: 'file', language: 'pyrlang' }, new DocumentSemanticTokensProvider(), legend);
-  // ctx.subscriptions.push(documentSemanticTokensProvider);
+  const documentSemanticTokensProvider = vscode.languages.registerDocumentSemanticTokensProvider({ scheme: 'file', language: 'pyrlang' }, new DocumentSemanticTokensProvider(), legend);
+  ctx.subscriptions.push(documentSemanticTokensProvider);
 }
 
 class CompletionItemProvider implements vscode.CompletionItemProvider {
@@ -51,94 +51,93 @@ class CompletionItemProvider implements vscode.CompletionItemProvider {
   }
 }
 
-// interface IToken {
-//   line: number;
-//   startCharacter: number;
-// 	length: number;
-// 	tokenType: string;
-// 	tokenModifiers: string[];
-// }
+interface IToken {
+  line: number;
+  startCharacter: number;
+	length: number;
+	tokenType: string;
+	tokenModifiers: string[];
+}
 
-// class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
-//   async provideDocumentSemanticTokens(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.SemanticTokens> {
-//     const allTokens = this._parseText(document.getText());
-//     const builder = new vscode.SemanticTokensBuilder();
-//     allTokens.forEach((token) => {
-//       builder.push(token.line, token.startCharacter, token.length, this._encodeTokenType(token.tokenType), this._encodeTokenModifiers(token.tokenModifiers));
-//     });
-//     return builder.build();
-//   }
+class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
+  async provideDocumentSemanticTokens(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.SemanticTokens> {
+    const allTokens = this._parseText(document.getText());
+    const builder = new vscode.SemanticTokensBuilder();
+    allTokens.forEach((token) => {
+      builder.push(token.line, token.startCharacter, token.length, this._encodeTokenType(token.tokenType), this._encodeTokenModifiers(token.tokenModifiers));
+    });
+    return builder.build();
+  }
 
-//   private _encodeTokenType(tokenType: string): number {
-//     if (tokenTypes.has(tokenType)) return tokenTypes.get(tokenType)!;
-//     return 0;
-//   }
+  private _encodeTokenType(tokenType: string): number {
+    if (tokenTypes.has(tokenType)) return tokenTypes.get(tokenType)!;
+    return 0;
+  }
 
-//   private _encodeTokenModifiers(strTokenMods: string[]): number {
-//     let result = 0;
-// 		for (const tokenModifier of strTokenMods) {
-// 			if (tokenMods.has(tokenModifier)) {
-// 				result = result | (1 << tokenMods.get(tokenModifier)!);
-// 			}
-//     }
-// 		return result;
-//   }
+  private _encodeTokenModifiers(strTokenMods: string[]): number {
+    let result = 0;
+		for (const tokenModifier of strTokenMods) {
+			if (tokenMods.has(tokenModifier)) {
+				result = result | (1 << tokenMods.get(tokenModifier)!);
+			}
+    }
+		return result;
+  }
 
-//   private _parseText(text: string): IToken[] {
-//     const out: IToken[] = [];
-//     const lines = text.split(/\r\n|\r|\n/);
+  // TODO: parse params
+  private _parseText(text: string): IToken[] {
+    const out: IToken[] = [];
+    const lines = text.split(/\r\n|\r|\n/);
 
-//     let inString = false;
-//     for (let i = 0; i < lines.length; i++) {
-//       const line = lines[i];
-//       let column = 0;
-//       let currentWord = '';
-//       do {
-//         if (line[column] === '"' && ((inString && line[column - 1] !== '\\') || true)) inString = !inString;
-//         while (!inString && !/[a-zA-Z0-9"]|/.test(line[column])) column++;
-//         if (line[column] === '#') {
-//           do column++;
-//           while (column < line.length);
-//         }
+    let prevLexeme = "";
 
-//         currentWord += line[column];
-//         column++;
+    function consumeUntil(line: string, columnEnd: number, start: string, end: string): number {
+      if (line[columnEnd] === start) {
+        do columnEnd++;
+        while (columnEnd < line.length && line[columnEnd] !== end);
+      }
+      return columnEnd;
+    }
 
-//         let tokenType: string | undefined;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      let columnStart = 0;
+      let columnEnd = 0;
+      let indentSize = 0;
 
-//         switch (currentWord) {
-//           case 'if':
-//           case 'else':
-//           case 'while':
-//           case 'print':
-//           case 'true':
-//           case 'false':
-//           case 'and':
-//           case 'or':
-//             if (!/[a-zA-Z0-9_]/.test(line[column])) currentWord = '';
-//             break;
+      while (indentSize < line.length && /[\t ]/.test(line[indentSize])) indentSize++;
+      columnStart = indentSize;
 
-//           default:
-//               if (!inString && currentWord.length > 0 && /[a-zA-Z_][a-zA-Z0-9_]*/.test(currentWord) && (column > line.length - 1 || !/[a-zA-Z_][a-zA-Z0-9_]*/.test(line[column]))) {
-//                 tokenType = 'variable';
-//                 break;
-//             }
-//           break;
-//         }
+      do {
+        columnEnd = consumeUntil(line, columnEnd, "\"", "\"");
+        columnStart = columnEnd;
+        if (line[columnEnd] === '#')
+          do columnEnd++;
+          while (columnEnd < line.length);
+        while (columnEnd < line.length && line[columnEnd] !== ' ') {
+          columnEnd = consumeUntil(line, columnEnd, "(", ")");
+          columnEnd++;
+        }
 
-//         if (tokenType !== undefined) {
-//           out.push({
-//             line: i,
-//             startCharacter: column - currentWord.length,
-//             length: currentWord.length,
-//             tokenType: tokenType!,
-//             tokenModifiers: []
-//           });
-//           currentWord = '';
-//         }
-//       } while (column < line.length);
-//     }
+        const lexeme = line.substring(columnStart, columnEnd).replace(/\+|-|\*|\/|=|!|<|>|==|!=|<=|>=|%|and|or|\^|:/, "");
+        if (lexeme.length > 0) {
+          if (/[a-zA-Z_][a-zA-Z0-9_]*\(.*\)/.test(lexeme)) {
+            out.push({
+              length: lexeme.indexOf('('),
+              line: i,
+              startCharacter: columnStart,
+              tokenType: "function",
+              tokenModifiers: []
+            });
+          }
+        }
 
-//     return out;
-//   }
-// }
+        columnEnd++;
+        columnStart = columnEnd;
+        prevLexeme = lexeme;
+      } while (columnEnd < line.length);
+    }
+
+    return out;
+  }
+}
