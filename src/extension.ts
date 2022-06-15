@@ -109,17 +109,22 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
       columnStart = indentSize;
 
       do {
-        columnEnd = consumeUntil(line, columnEnd, "\"", "\"");
-        columnStart = columnEnd;
-        if (line[columnEnd] === '#')
-          do columnEnd++;
-          while (columnEnd < line.length);
         while (columnEnd < line.length && line[columnEnd] !== ' ') {
+          let newColumnEnd = consumeUntil(line, columnEnd, "\"", "\"");
+          if (newColumnEnd > columnEnd) {
+            columnEnd = newColumnEnd;
+            columnStart = columnEnd;
+          }
+          newColumnEnd = consumeUntil(line, columnEnd, "#", "");
+          if (newColumnEnd > columnEnd) {
+            columnEnd = newColumnEnd;
+            columnStart = columnEnd;
+          }
           columnEnd = consumeUntil(line, columnEnd, "(", ")");
           columnEnd++;
         }
 
-        const lexeme = line.substring(columnStart, columnEnd).replace(/\+|-|\*|\/|=|!|<|>|==|!=|<=|>=|%|and|or|\^|:/, "");
+        const lexeme = line.substring(columnStart, columnEnd).replace(/\+|-|\*|\/|=|!|<|>|==|!=|<=|>=|%|and|or|\^|:|#|->/, "");
         if (lexeme.length > 0) {
           if (/[a-zA-Z_][a-zA-Z0-9_]*\(.*\)/.test(lexeme)) {
             out.push({
