@@ -53,11 +53,21 @@
     },
     "numbers": {
       "name": "constant.numeric.pyrlang",
-      "match": "[0-9]+"
+      "match": "[0-9]+",
+      "captures": {
+        "1": {
+          "name": "constant.numeric.integer.pyrlang"
+        }
+      }
     },
     "operators": {
       "name": "keyword.operator.pyrlang",
-      "match": "\\+|\\-|\\*|\\/|\\=|\\!|\\<|\\>|\\=\\=|\\!\\=|\\<\\=|\\>\\=|\\%|and|or|\\^|\\-\\>|\\:"
+      "match": "\\+|\\-|\\*|\\/|\\=|\\!|\\<|\\>|\\=\\=|\\!\\=|\\<\\=|\\>\\=|\\%|\\b(and|or)\\b|\\^|\\-\\>|\\:",
+      "captures": {
+        "1": {
+          "name": "punctuation.operator.pyrlang"
+        }
+      }
     },
     "comments": {
       "name": "comment.line.number-sign.pyrlang",
@@ -66,7 +76,12 @@
     },
     "variables": {
       "name": "variable.pyrlang",
-      "match": "\\b[a-zA-Z][a-zA-Z0-9_]*\\b"
+      "match": "\\b[a-zA-Z][a-zA-Z0-9_]*\\b",
+      "captures": {
+        "1": {
+          "name": "variable.other.pyrlang"
+        }
+      }
     },
     "booleans": {
       "name": "constant.language.pyrlang",
