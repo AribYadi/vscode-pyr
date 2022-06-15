@@ -13,7 +13,7 @@
   },
   "onEnterRules": [
     {
-      "beforeText": "^\\s*(?:if|else|while).*?:\\s*$",
+      "beforeText": "^\\s*(?:if|else|while|func).*?:\\s*$",
       "action": { "indent": "indent" }
     }
   ]
