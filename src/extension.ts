@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import * as vscode from "vscode";
 
 const tokenTypes = new Map<string, number>;
@@ -124,7 +125,7 @@ class DocumentSemanticTokensProvider implements vscode.DocumentSemanticTokensPro
           columnEnd++;
         }
 
-        const lexeme = line.substring(columnStart, columnEnd).replace(/\+|-|\*|\/|=|!|<|>|==|!=|<=|>=|%|\b(and|or)\b|\^|:|#|->|"/, "");
+        const lexeme = line.substring(columnStart, columnEnd).replace(/\+|\-|\*|\/|\=|\!|\<|\>|\=\=|\!\=|\<\=|\>\=|\%|\b(and|or)\b|\^|\-\>|\:|\>\>|\<\<|\&|\||"/, "");
         if (lexeme.length > 0) {
           if (/[a-zA-Z_][a-zA-Z0-9_]*\(.*\)/.test(lexeme)) {
             out.push({

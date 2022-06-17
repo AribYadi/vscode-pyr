@@ -32,7 +32,7 @@
       "patterns": [
         {
           "name": "keyword.control.pyrlang",
-          "match": "\\b(if|else|while|print)\\b"
+          "match": "\\b(if|else|while)\\b"
         },
         {
           "name": "keyword.other.pyrlang",
@@ -62,7 +62,7 @@
     },
     "operators": {
       "name": "keyword.operator.pyrlang",
-      "match": "\\+|\\-|\\*|\\/|\\=|\\!|\\<|\\>|\\=\\=|\\!\\=|\\<\\=|\\>\\=|\\%|\\b(and|or)\\b|\\^|\\-\\>|\\:",
+      "match": "\\+|\\-|\\*|\\/|\\=|\\!|\\<|\\>|\\=\\=|\\!\\=|\\<\\=|\\>\\=|\\%|\\b(and|or)\\b|\\^|\\-\\>|\\:|\\>\\>|\\<\\<|\\&|\\|",
       "captures": {
         "1": {
           "name": "punctuation.operator.pyrlang"
